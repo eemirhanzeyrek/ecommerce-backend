@@ -3,6 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
+const db = require("./config/db");
 
 dotenv.config();
 
@@ -15,6 +16,8 @@ app.use(cookieParser());
 app.get("/products", (req, res) => {
   res.status(200).json({ message: "success" });
 });
+
+db();
 
 const PORT = 4000;
 app.listen(PORT, () => {
