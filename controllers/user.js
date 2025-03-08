@@ -1,8 +1,15 @@
 const User = require("../controllers/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const cloudinary = require("cloudinary").v2;
 
 const register = async (req, res) => {
+  const avatar = await cloudinary.uploader.upload(req.body.avatar, {
+    folder: "avatars",
+    width: 125,
+    crop: "scale",
+  });
+
   const { name, email, password } = req.body;
   const user = await User.findOne({ email });
 
@@ -20,7 +27,14 @@ const register = async (req, res) => {
     });
   }
 
-  const newUser = await User.create({ name: email, password: passwordHash });
+  const newUser = await User.create({
+    name: email,
+    password: passwordHash,
+    avatar: {
+      public_id: avatar.public_id,
+      url: avatar.secure_url,
+    },
+  });
 
   const token = await jwt.sign({ id: newUser._id }, "USER_SECRET_TOKEN", {
     expiresIn: "1h",
