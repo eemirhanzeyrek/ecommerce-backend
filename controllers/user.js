@@ -38,9 +38,13 @@ const register = async (req, res) => {
     },
   });
 
-  const token = await jwt.sign({ id: newUser._id }, "USER_SECRET_TOKEN", {
-    expiresIn: "1h",
-  });
+  const token = await jwt.sign(
+    { id: newUser._id },
+    process.env.USER_SECRET_TOKEN,
+    {
+      expiresIn: "1h",
+    }
+  );
   const cookieOptions = {
     httpOnly: true,
     expires: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
@@ -68,9 +72,13 @@ const login = async (req, res) => {
     });
   }
 
-  const token = await jwt.sign({ id: user._id }, "USER_SECRET_TOKEN", {
-    expiresIn: "1h",
-  });
+  const token = await jwt.sign(
+    { id: user._id },
+    process.env.USER_SECRET_TOKEN,
+    {
+      expiresIn: "1h",
+    }
+  );
   const cookieOptions = {
     httpOnly: true,
     expires: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
@@ -117,18 +125,18 @@ const forgotPassword = async (req, res) => {
 
   try {
     const transporter = nodemailer.createTransport({
-      port: 465,
-      service: "gmail",
-      host: "smtp.gmail.com",
+      port: process.env.MAIL_PORT,
+      service: process.env.MAIL_SERVICE,
+      host: process.env.MAIL_HOST,
       auth: {
-        user: "ADMIN_EMAIL_ADDRESS",
-        pass: "ADMIN_EMAIL_PASSWORD",
+        user: process.env.ADMIN_EMAIL_ADDRESS,
+        pass: process.env.ADMIN_EMAIL_PASSWORD,
       },
       secure: true,
     });
 
     const mailData = {
-      from: "SEND_EMAIL_ADDRESS",
+      from: process.env.ADMIN_EMAIL_ADDRESS,
       to: req.body.email,
       subject: "Password Reset Link",
       text: message,
@@ -176,7 +184,7 @@ const resetPassword = async (req, res) => {
 
   await user.save();
 
-  const token = jwt.sign({ id: user._id }, "USER_SECRET_TOKEN", {
+  const token = jwt.sign({ id: user._id }, process.env.USER_SECRET_TOKEN, {
     expiresIn: "1h",
   });
 
