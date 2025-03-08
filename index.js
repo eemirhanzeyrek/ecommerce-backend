@@ -5,7 +5,7 @@ const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const db = require("./config/db");
 const product = require("./routes/product");
-const cloudinary = require("cloudinary");
+const cloudinary = require("cloudinary").v2;
 
 dotenv.config();
 
