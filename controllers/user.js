@@ -72,15 +72,13 @@ const login = async (req, res) => {
     });
   }
 
-  const token = await jwt.sign(
-    { id: user._id },
-    process.env.USER_SECRET_TOKEN,
-    {
-      expiresIn: "1h",
-    }
-  );
+  const token = jwt.sign({ id: user._id }, process.env.USER_SECRET_TOKEN, {
+    expiresIn: "1h",
+  });
   const cookieOptions = {
-    httpOnly: true,
+    //httpOnly: true,
+    sameSite: "Lax",
+    domain: ".localhost",
     expires: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
   };
   res.status(200).cookie("token", token, cookieOptions).json({
