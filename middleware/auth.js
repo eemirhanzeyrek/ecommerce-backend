@@ -4,23 +4,29 @@ const jwt = require("jsonwebtoken");
 const authMidd = async (req, res, next) => {
   const token = req.headers.authorization.split("")[1];
 
-  if (!token) {
-    return res.status(500).json({
-      message: "log in to access",
+  try {
+    if (!token) {
+      return res.status(500).json({
+        message: "log in to access",
+      });
+    }
+
+    const decodedData = jwt.verify(token, process.env.USER_SECRET_TOKEN);
+
+    if (!decodedData) {
+      return res.status(500).json({
+        message: "your access token is invalid",
+      });
+    }
+
+    req.user = await User.findById(decodedData.id);
+
+    next();
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
     });
   }
-
-  const decodedData = jwt.verify(token, process.env.USER_SECRET_TOKEN);
-
-  if (!decodedData) {
-    return res.status(500).json({
-      message: "your access token is invalid",
-    });
-  }
-
-  req.user = await User.findById(decodedData.id);
-
-  next();
 };
 
 const roleChecked = (...roles) => {
