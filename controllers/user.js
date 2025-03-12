@@ -17,7 +17,7 @@ const register = async (req, res) => {
 
   if (user) {
     return res.status(500).json({
-      message: "such a user already exists",
+      message: "Such a user already exists",
     });
   }
 
@@ -25,7 +25,7 @@ const register = async (req, res) => {
 
   if (password.length < 6) {
     return res.status(500).json({
-      message: "password cannot be shorter than 6 characters",
+      message: "Password cannot be shorter than 6 characters",
     });
   }
 
@@ -45,6 +45,7 @@ const register = async (req, res) => {
       expiresIn: "1h",
     }
   );
+
   const cookieOptions = {
     httpOnly: true,
     expires: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
@@ -61,14 +62,14 @@ const login = async (req, res) => {
 
   if (!user) {
     return res.status(500).json({
-      message: "no such user found",
+      message: "No such user found",
     });
   }
 
   const comparePassword = await bcrypt.compare(password, user.password);
   if (!comparePassword) {
     return res.status.json({
-      message: "you entered the wrong password",
+      message: "You entered the wrong password",
     });
   }
 
@@ -93,7 +94,7 @@ const logout = async (req, res) => {
     expires: new Date(Date.now()),
   };
   res.status(200).cookie("token", null, cookieOptions).json({
-    message: "logout successful",
+    message: "Logout successful",
   });
 };
 
@@ -102,7 +103,7 @@ const forgotPassword = async (req, res) => {
 
   if (!user) {
     return res.status(500).json({
-      message: "no such user found",
+      message: "No such user found",
     });
   }
 
@@ -119,13 +120,13 @@ const forgotPassword = async (req, res) => {
   const passwordUrl = `${req.protocol}://${req.get(
     "host"
   )}/reset/${resetToken}`;
-  const message = `your token to reset your password : ${passwordUrl}`;
+  const message = `Your token to reset your password : ${passwordUrl}`;
 
   try {
     const transporter = nodemailer.createTransport({
-      port: process.env.MAIL_PORT,
-      service: process.env.MAIL_SERVICE,
-      host: process.env.MAIL_HOST,
+      port: 465,
+      service: "gmail",
+      host: "smtp.gmail.com",
       auth: {
         user: process.env.ADMIN_EMAIL_ADDRESS,
         pass: process.env.ADMIN_EMAIL_PASSWORD,
@@ -144,7 +145,7 @@ const forgotPassword = async (req, res) => {
 
     res.status(200).json({
       message:
-        "a password reset link has been sent to your email address registered in the system",
+        "A password reset link has been sent to your email address registered in the system",
     });
   } catch (error) {
     user.resetPasswordToken = undefined;
@@ -171,7 +172,7 @@ const resetPassword = async (req, res) => {
 
   if (!user) {
     return res.status(500).json({
-      message: "invalid reset link",
+      message: "Invalid reset link",
     });
   }
 

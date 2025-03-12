@@ -70,7 +70,7 @@ const deleteProduct = async (req, res, next) => {
   await product.remove();
 
   res.status(200).json({
-    message: "product successfully deleted",
+    message: "Product successfully deleted",
   });
 };
 
@@ -136,7 +136,7 @@ const createReview = async (req, res, next) => {
   await product.save({ validateBeforeSave: false });
 
   res.status(200).json({
-    message: "comment added successfully",
+    message: "Comment added successfully",
   });
 };
 

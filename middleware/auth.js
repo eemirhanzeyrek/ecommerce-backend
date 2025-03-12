@@ -7,7 +7,7 @@ const authMidd = async (req, res, next) => {
   try {
     if (!token) {
       return res.status(500).json({
-        message: "log in to access",
+        message: "Login to access",
       });
     }
 
@@ -15,7 +15,7 @@ const authMidd = async (req, res, next) => {
 
     if (!decodedData) {
       return res.status(500).json({
-        message: "your access token is invalid",
+        message: "Your access token is invalid",
       });
     }
 
@@ -33,7 +33,7 @@ const roleChecked = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return res.status(500).json({
-        message: "you do not have permission to log in",
+        message: "You do not have permission to login",
       });
     }
     next();
